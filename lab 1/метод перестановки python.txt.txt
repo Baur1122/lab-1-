@@ -1,0 +1,17 @@
+def getCipher (origin_key, origin_text)
+    clear_text = ''.join(origin_text.split(' ')).lower()
+    k = len(clear_text)  len(origin_key)
+
+    шифр = {}
+    для индекса, ch в перечислении (origin_key.lower())
+        если ch в шифре
+            шифр[ch] += clear_text[index  k  index  k + k]
+        еще
+            шифр[ch] = прозрачный_текст[индекс  k  индекс  k + k]
+
+    cipher_text = ''.join([''.join([cipher[key][index] для ключа в отсортированном(cipher.keys())]) для индекса в диапазоне(k)])
+    return ' '.join([cipher_text[index index + k] для индекса в диапазоне (0, len(cipher_text), k)]).upper()
+
+
+print(getCipher('ДЖОН', 'ПРИБЫВАЕТ СЕГОДНЯ НОЧЬЮ'))
+# ГАПАП ПАПАНЕЕКН НЕГ

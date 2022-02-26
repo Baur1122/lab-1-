@@ -1,0 +1,129 @@
+импортировать java.io.DataInputStream;
+импортировать java.io.DataOutputStream;
+импортировать java.io.EOFException;
+импортировать java.io.FileInputStream;
+импортировать java.io.FileOutputStream;
+ 
+открытый класс TeaEcb {
+    частный конечный статический интервал DELTA = 0x9e3779b9;
+    private final static int CYCLES = 32;
+    частная сумма;
+    
+    public static void main(String[] args){
+        новый TeaEcb();
+    }
+    
+    TeaEcb() {
+        Строка fname = "test.png";
+        ключ [] = {2, 112, 54, 8};
+        пытаться {
+            зашифровать файл (имя, ключ);
+            decryptFile(fname + "_encrypted", ключ);
+        } поймать (Исключение e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void encryptFile (строка fname, ключ int []) выдает исключение {
+        FileInputStream imgIn = новый FileInputStream(fname);
+        FileOutputStream imgOut = новый FileOutputStream (fname + "_encrypted");
+        DataInputStream dataIn = новый DataInputStream (imgIn);
+        DataOutputStream dataOut = новый DataOutputStream (imgOut);
+        int шифр[] = новый int[2];
+        логическая проверка = истина;
+        int[] img = новый int[2];
+        в то время как (данные.доступно ()> 0) {
+            пытаться{
+                img[0] = dataIn.readInt();
+                проверка = истина;
+                img[1] = dataIn.readInt();
+                шифр = зашифровать (изображение, ключ);
+                dataOut.writeInt (шифр [0]);
+                dataOut.writeInt (шифр [1]);
+                проверка = ложь;
+            } поймать (EOFException e) {  
+                если(!проверить){                     
+                    dataOut.writeInt(img[0]);
+                    dataOut.writeInt(img[1]);
+                }еще                           
+                    dataOut.writeInt(img[0]);
+            }
+        }
+        данные.закрыть();
+        dataOut.close();
+    }
+    
+    public void decryptFile (String fname, int [] key) выдает Exception {
+        FileInputStream imgIn = новый FileInputStream(fname);
+        FileOutputStream imgOut = новый FileOutputStream(fname + "_decrypted");
+        DataInputStream dataIn = новый DataInputStream (imgIn);
+        DataOutputStream dataOut = новый DataOutputStream (imgOut);
+        int обычный[] = новый int[2];
+        int[] img = новый int[2];
+        логическая проверка = истина;
+        в то время как (данные.доступно ()> 0) {
+            пытаться{                
+                img[0] = dataIn.readInt();
+                проверка = истина;
+                img[1] = dataIn.readInt();
+                обычный = расшифровать (изображение, ключ);
+                dataOut.writeInt (обычный [0]);
+                dataOut.writeInt (обычный [1]);
+                проверка = ложь;
+            } поймать (EOFException e) {
+                System.out.println("Проверить > " + проверить);
+                если(!проверить){
+                    dataOut.writeInt(img[0]);
+                    dataOut.writeInt(img[1]);
+                }еще
+                    dataOut.writeInt(img[0]);;
+            }
+            
+        }
+        данные.закрыть();
+        dataOut.close();
+    }
+    
+    private int[] encrypt(int[] data, int[] key) выдает Exception{
+        если (ключ == ноль) {
+            выдать новое исключение ("Ключ не определен!");
+        }
+        если (ключ.длина!= 4) {
+            throw new Exception("Недопустимая длина ключа!");
+        }
+        интервал слева = данные [0];
+        интервал вправо = данные [1];
+        сумма = 0;
+        for(int i=0; i<ЦИКЛЫ;i++){
+            сумма += ДЕЛЬТА;
+            влево += ((право << 4) + клавиша [0]) ^ (право + сумма) ^ ((право >> 5) + клавиша [1]);
+            вправо += ((влево << 4) + клавиша [2]) ^ (влево + сумма) ^ ((влево >> 5) + клавиша [3]);
+ 
+        }
+        блок int[] = новый int[2];
+        блок[0] = слева;
+        блок[1] = справа;
+        возвратный блок;
+    }
+    
+    private int[] decrypt(int[] data, int[] key) выдает Exception{
+        если (ключ == ноль) {
+            выдать новое исключение ("Ключ не определен!");
+        }
+        если (ключ.длина!= 4) {
+            throw new Exception("Недопустимая длина ключа!");
+        }
+        интервал слева = данные [0];
+        интервал вправо = данные [1];
+        сумма = ДЕЛЬТА << 5;
+        for(int i=0; i<ЦИКЛЫ;i++){
+            right -= ((left << 4) + key[2]) ^ (left+sum) ^ ((left >> 5) + key[3]);
+            влево -= ((право << 4) + клавиша [0]) ^ (право + сумма) ^ ((право >> 5) + клавиша [1]);
+            сумма -= ДЕЛЬТА;
+        }
+        блок int[] = новый int[2];
+        блок[0] = слева;
+        блок[1] = справа;
+        возвратный блок;
+    }
+}

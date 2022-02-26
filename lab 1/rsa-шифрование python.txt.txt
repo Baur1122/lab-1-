@@ -1,0 +1,125 @@
+Попробуйте - формируем Кыф- ключ
+PythonВыделить код
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+из Cryptodome.PublicKey импортировать RSA
+ 
+код = 'никто не знает'
+ключ = RSA.generate(2048)
+ 
+зашифрованный_ключ = ключ.exportKey(
+    парольная фраза=код,
+    ПКС=8,
+    защита = "scryptAndAES128-CBC"
+)
+ 
+с open('my_private_rsa_key.bin', 'wb') как f:
+    f.write(зашифрованный_ключ)
+ 
+с open('my_rsa_public.pem', 'wb') как f:
+    f.write(key.publickey().exportKey())
+Добавлено через 3 минуты
+шифруем файд
+PythonВыделить код
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+из Cryptodome.PublicKey импортировать RSA
+из Cryptodome. Случайный импорт get_random_bytes
+из Cryptodome.Cipher импортировать AES, PKCS1_OAEP
+ 
+с open('encrypted_data.bin', 'wb') как out_file:
+    получатель_ключ = RSA.import_key(
+        открыть('my_rsa_public.pem').read()
+    )
+ 
+    session_key = get_random_bytes(16)
+ 
+    cipher_rsa = PKCS1_OAEP.new (ключ_получателя)
+    out_file.write(cipher_rsa.encrypt(session_key))
+ 
+    cipher_aes = AES.новый (сеансовый_ключ, AES.MODE_EAX)
+    данные = б'бла-бла-бла Python бла-бла'
+    зашифрованный текст, тег = cipher_aes.encrypt_and_digest(данные)
+ 
+    out_file.write(cipher_aes.nonce)
+    out_file.write(тег)
+    out_file.write(зашифрованный текст)
+Добавлено через 21 минуту
+PythonВыделить код
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+из Cryptodome.PublicKey импортировать RSA
+из Cryptodome.Cipher импортировать AES, PKCS1_OAEP
+ 
+код = 'никто не знает'
+ 
+с open('encrypted_data.bin', 'rb') как fobj:
+    private_key = RSA.import_key(
+        открыть('my_rsa_key.pem').read(),
+        парольная фраза=код
+    )
+ 
+    enc_session_key, одноразовый номер, тег, зашифрованный текст = [
+        fobj.read(x) для x в (private_key.size_in_bytes(), 16, 16, -1)
+    ]
+ 
+    cipher_rsa = PKCS1_OAEP.новый (закрытый_ключ)
+    session_key = cipher_rsa.decrypt(enc_session_key)
+ 
+    cipher_aes = AES.new (сеансовый_ключ, AES.MODE_EAX, одноразовый номер)
+    data = cipher_aes.decrypt_and_verify (зашифрованный текст, тег)
+ 
+печать (данные)

@@ -1,0 +1,221 @@
+с помощью системы;
+используя System.Collections.Generic;
+с помощью System.Linq;
+ 
+пространство имен TestConsole
+{   
+    /// <сводка>
+    /// Класс, который содержит символ и его порядковый номер в строке, выражении от алфавита.
+    /// </резюме>
+    класс CharNum
+    {
+        #регион Поля
+        /// <сводка>
+        /// Символ.
+        /// </резюме>
+        частный символ _ch;
+        /// <сводка>
+        /// Порядковый номер сигнатуры от алфавита.
+        /// </резюме>
+        частный интервал _numberInWord;
+        #endregion Фиды
+ 
+        #регион Свойства
+        /// <сводка>
+        /// Символ.
+        /// </резюме>
+        общественный символ Ch
+        {
+            получить {возврат _ch; }
+            задавать
+            {
+                если (_ch == значение)
+                    вернуть;
+                _ch = значение;
+            }
+        }
+        /// <сводка>
+        /// Порядковый номер в строке, заметный отсчета.
+        /// </резюме>
+        общедоступный интервал NumberInWord
+        {
+            получить {возврат _numberInWord; }
+            задавать
+            {
+                если (_numberInWord == значение)
+                    вернуть;
+                _numberInWord = значение;
+            }
+        }
+        #endregion Свойства
+    }
+ 
+    программа класса
+    {
+        статическая пустота Main (string [] args)
+        {  
+            // Первый ключ, количество столбцов
+            string firstKey = "Сканер";
+            // Второй ключ, количество строк
+            string secondKey = "Надо";
+            // Предложение, которое шифруем
+            string stringUser = "Системный пароль изменен";
+ 
+            // Матрица, в которой вычисляется шифрование
+            char[,] матрица = новый char[secondKey.Length, firstKey.Length];
+ 
+            // Счетчик символов в строке
+            интервал символов = 0;
+ 
+            // Переводим строки в массивы типа char
+            char[] charsFirstKey = firstKey.ToCharArray();
+            char[] charsSecondKey = secondKey.ToCharArray();
+            char[] charStringUser = stringUser.ToCharArray();
+ 
+            // Создаем списки в которых хранятся символы и порядковые номера символов
+            Список<CharNum> списокCharNumFirst =
+                новый список<CharNum>(firstKey.Length);
+ 
+            Список<CharNum> listCharNumSecond =
+                новый список<CharNum>(secondKey.Length);
+ 
+            // Загружаем символы из ключей
+            listCharNumFirst = FillListKey(charsFirstKey);
+            listCharNumSecond = FillListKey(charsSecondKey);
+ 
+            // Заполняем порядковыми номерами
+            listCharNumFirst = ЗаполняющийСерийныйНомер(listCharNumFirst);
+            listCharNumSecond = ЗаполняющийСерийныйНомер(listCharNumSecond);
+ 
+            ShowKey(listCharNumFirst, "Первый ключ: ");
+            ShowKey(listCharNumSecond, "Второй ключ: ");
+           
+            // Заполнение строк строкой пользователя
+            for (int i = 0; i < listCharNumSecond.Count; i++)
+            {
+                for(int j = 0; j < listCharNumFirst.Count; j++)
+                {
+                    matrix[i, j] = charStringUser[countSymbols++];
+                }
+            }
+ 
+            ShowMatrix(matrix, "Первоначальное значение: ");
+          
+            количество символов = 0;
+            // Заполнение матрицы с учетом блокировки.
+            // Переставляем столбцы по порядку следования в первом ключе.
+            // Затем переставляем строки по порядку следствия во втором ключа.
+            for(int i = 0; i < listCharNumSecond.Count; i++)
+            {
+                for(int j = 0; j < listCharNumFirst.Count; j++)
+                {
+                    матрица[списокCharNumSecond[i].NumberInWord,
+                       listCharNumFirst[j].NumberInWord] = charStringUser[countSymbols++];
+                }
+            }
+ 
+            ShowMatrix(matrix, "Зашифрованное значение: ");
+ 
+            Консоль.ReadKey();
+        }
+ 
+        #region Методы
+        /// <сводка>
+        /// Возвращает порядковый номер символа по алфавиту.
+        /// </резюме>
+        /// <param name="s">Символ, чей порядковый номер, необходимо узнать.</param>
+        /// <возвраты></возвраты>
+        public static int GetNumberInThealphabet(char s)
+        {
+            string str = @"АаБбВвГгДдЕеЁёЖжЗзИиЙйКкЛлМмНнОоПпРрСсТтУуФфХхЦцЧчШшЩщЪъЫыЬьЭэЮюЯя";
+ 
+            число int = str.IndexOf(s) / 2;
+ 
+            обратный номер;
+        }
+ 
+        /// <сводка>
+        /// Заполнение списка символов с ключом.
+        /// </резюме>
+        /// <param name="chars">массив символов.</param>
+        /// <returns>Список символов.</returns>
+        общедоступный статический список<CharNum> FillListKey(char[] chars)
+        {
+            List<CharNum> listKey = новый список<CharNum>(chars.Length);
+ 
+            for (int i = 0; i < chars.Length; i++)
+            {
+                CharNum charNum = новый CharNum()
+                {
+                    Ch = символы [i],
+                    ЧислоВСлове = ПолучитьЧислоВАлфавите(символы[i])
+                };
+ 
+                listKey.Добавить (charNum);
+            }
+            вернуть списокКлюч;
+        }
+        /// <сводка>
+        /// Отражение ключа.
+        /// </резюме>
+        /// <param name="listCharNum">Список, какие встречаются символы с порядковыми номерами.</param>
+        public static void ShowKey(List<CharNum> listCharNum, строковое сообщение)
+        {
+            Console.WriteLine(сообщение);
+ 
+            foreach (var i в listCharNum)
+            {
+                Console.Write(i.Ch + " ");
+            }
+            Консоль.ЗаписьЛинии();
+ 
+            foreach (var i в listCharNum)
+            {
+                Console.Write(i.NumberInWord + " ");
+            }
+            Консоль.ЗаписьЛинии();
+            Консоль.ЗаписьЛинии();
+        }
+        /// <сводка>
+        /// Заполнение символов ключей, порядковыми номерами.
+        /// </резюме>
+        /// <param name="listCharNum"></param>
+        /// <возвраты></возвраты>
+        общедоступный статический список<CharNum> FillingSerialsNumber(
+            Список<CharNum> списокCharNum)
+        {
+            количество счетчиков = 0;
+ 
+            результат var = listCharNum.OrderBy(a =>
+                а.ЧислоВ Слове);
+ 
+            foreach (var i в результате)
+            {
+                i.ЧислоВСлове = количество++;
+            }
+ 
+            вернуть списокCharNum;
+        }
+        /// <сводка>
+        /// Отражение матрицы.
+        /// </резюме>
+        /// <param name="matrix">Матрица с символами.</param>
+        public static void ShowMatrix (char [,] матрица, строковое сообщение)
+        {
+            Console.WriteLine(сообщение);
+            for(int i = 0; i < matrix.GetLength(0); i++)
+            {
+                for(int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    Console.Write(matrix[i, j] + " ");
+                }
+                Консоль.ЗаписьЛинии();
+            }
+            Консоль.ЗаписьЛинии();
+            Консоль.ЗаписьЛинии();
+        }
+ 
+        #endregion Методы
+    }
+ 
+}
